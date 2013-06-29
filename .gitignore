@@ -1,0 +1,10 @@
+Keynect/_ReSharper.Keynect
+*.user
+Keynect/Keynect/bin
+Keynect/Keynect/obj
+*.suo
+Keynect/KeynectModel/bin
+Keynect/KeynectModel/obj
+obj/
+bin/
+Kynapsee/_ReSharper.Kynapsee

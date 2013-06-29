@@ -1,0 +1,86 @@
+﻿<Window x:Class="Kynapsee.Views.GesturesWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:local="clr-namespace:Kynapsee.ViewModels"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF4" mc:Ignorable="d" Title="Manage Gestures"
+        Icon="../Images/Gesture.png" Height="483" Width="975" local:DialogCloser.DialogResult="{Binding DialogResult}" Closing="Window_Closing">
+
+    <Window.Resources>
+        <local:VisibilityConverter x:Key="VisibilityConverter" />
+        <local:GestureImageConverter x:Key="GestureImageConverter" />
+    </Window.Resources>
+    
+    <DockPanel LastChildFill="True">
+        <Border DockPanel.Dock="Bottom" BorderThickness="0,1,0,0" BorderBrush="{x:Static SystemColors.ControlDarkBrush}" Background="{x:Static SystemColors.ControlBrush}">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="OK" Padding="10, 4" Margin="4,4,4,4" IsDefault="True" Command="{Binding SaveAndCloseCommand, Mode=OneWay}" />
+                <Button Content="Apply" Padding="10, 4" Margin="0,4,4,4" Command="{Binding SaveCommand, Mode=OneWay}" />
+                <Button Content="Cancel" Padding="10, 4" Margin="0,4,4,4" IsCancel="True" />
+            </StackPanel>
+        </Border>
+        <DockPanel LastChildFill="True">
+
+            <DockPanel DockPanel.Dock="Right" LastChildFill="True">
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Margin="4" Command="{Binding NewGestureCommand, Mode=OneWay}" VerticalAlignment="Top" HorizontalContentAlignment="Left" HorizontalAlignment="Right" Padding="4">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                            <Image Width="16"  Source="../Images/GestureAdd.png" />
+                            <TextBlock Text="Create a new gesture" VerticalAlignment="Center" Margin="4,0,0,0" />
+                        </StackPanel>
+                    </Button>
+                    <Button Margin="4" Content="Import" VerticalAlignment="Top" HorizontalContentAlignment="Left" HorizontalAlignment="Right" Padding="4" />
+                    <Button Margin="4" Content="Export" VerticalAlignment="Top" HorizontalContentAlignment="Left" HorizontalAlignment="Right" Padding="4" />
+                </StackPanel>
+                <ListBox HorizontalAlignment="Right" Margin="0,4,4,4" Name="listBox1" Width="400" ItemsSource="{Binding Gestures}"
+                         HorizontalContentAlignment="Stretch" SelectedItem="{Binding SelectedGesture}" MouseDown="listBox1_MouseDown">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel VerticalAlignment="Center" LastChildFill="True">
+                                <Image DockPanel.Dock="Left" Source="{Binding Recorded, Converter={StaticResource GestureImageConverter}}" Width="32" Height="32" Margin="4,4,4,4" />
+                                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="4">
+                                    <Button Command="{Binding EditCommand}" ToolTip="Edit the name of this gesture">
+                                        <!--<i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="Click">
+                                                <local:SetFocusTrigger TargetName="EditBox" />
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers> -->
+                                        <Button.Content>
+                                            <Image Source="../Images/GestureEdit.png" Width="16" />
+                                        </Button.Content>
+                                    </Button>
+                                    <Button Margin="4,0,0,0" Command="{Binding RecordCommand}" ToolTip="Record this gesture">
+                                        <Button.Content>
+                                            <Image Source="../Images/GestureRecord.png" Width="16" />
+                                        </Button.Content>
+                                    </Button>
+                                    <Button Margin="4,0,0,0" Command="{Binding RemoveCommand}" ToolTip="Remove this gesture">
+                                        <Image Source="../Images/GestureRemove.png" Width="16" />
+                                    </Button>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Gesture.Name}" Margin="4,0" VerticalAlignment="Center" HorizontalAlignment="Stretch" Visibility="{Binding IsEditing, ConverterParameter=true, Converter={StaticResource VisibilityConverter}}" />
+                                    <TextBox x:Name="EditBox" Text="{Binding Gesture.Name}" Margin="4,0" VerticalAlignment="Center" HorizontalAlignment="Stretch" Visibility="{Binding IsEditing, ConverterParameter=false, Converter={StaticResource VisibilityConverter}}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="LostFocus">
+                                                <cmd:EventToCommand Command="{Binding FinishEditingCommand, Mode=OneWay}" />
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </TextBox>
+                                    <TextBlock Margin="4,0" Text="{Binding Gesture.Guid}" FontSize="9" Foreground="Gray" />
+                                </StackPanel>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+                </ListBox>
+            </DockPanel>
+            <Canvas Name="skeletonCanvas" Margin="4,4,4,4" Background="#FF111111">
+                <TextBlock Name="statusText"  Text="{Binding StatusText}" FontSize="24" Foreground="White" Margin="4" />
+                
+            </Canvas>
+        </DockPanel>
+    </DockPanel>
+</Window>

@@ -1,0 +1,63 @@
+﻿<UserControl x:Class="Kynapsee.Views.TransitionsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF4" xmlns:local="clr-namespace:Kynapsee.ViewModels" mc:Ignorable="d" 
+             d:DesignHeight="429" d:DesignWidth="378" x:Name="Root">
+
+
+    <UserControl.Resources>
+        <local:VisibilityConverter x:Key="VisibilityConverter" />
+
+    </UserControl.Resources>
+
+    <DockPanel LastChildFill="True" Margin="4">
+        <Button DockPanel.Dock="Bottom" Margin="0,4,0,0" Command="{Binding NewTransitionCommand, Mode=OneWay}" VerticalAlignment="Top" HorizontalContentAlignment="Left" HorizontalAlignment="Right" Padding="4">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <Image Width="16"  Source="../Images/GestureAdd.png" />
+                <TextBlock Text="Add a transition" VerticalAlignment="Center" Margin="4,0,0,0" />
+            </StackPanel>
+        </Button>
+        <ListBox Name="listBox1" ItemsSource="{Binding Transitions}" SelectedItem="{Binding SelectedTransition}" MouseDown="listBox1_MouseDown"
+                 HorizontalContentAlignment="Stretch" >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <DockPanel VerticalAlignment="Center" LastChildFill="True">
+                        <Image DockPanel.Dock="Left" Source="../Images/Transition.png" Width="32" Height="32" Margin="4,4,4,4" />
+                        
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="4">
+                            <Button Command="{Binding EditCommand}" ToolTip="Edit this transition">
+                                <Button.Content>
+                                    <Image Source="../Images/GestureEdit.png" Width="16" />
+                                </Button.Content>
+                            </Button>
+                            <Button Margin="4,0,0,0" Command="{Binding RemoveCommand}" ToolTip="Remove this transition">
+                                <Image Source="../Images/GestureRemove.png" Width="16" />
+                            </Button>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+
+                            <TextBlock Text="{Binding Transition.Gesture}" Margin="4,0,4,0" VerticalAlignment="Center" HorizontalAlignment="Stretch" Visibility="{Binding IsEditing, ConverterParameter=true, Converter={StaticResource VisibilityConverter}}" />
+                            <TextBlock Text="{Binding Transition.Method}" Margin="4,0" VerticalAlignment="Center" HorizontalAlignment="Stretch" Visibility="{Binding IsEditing, ConverterParameter=true, Converter={StaticResource VisibilityConverter}}" />
+                            
+                            <ComboBox SelectedItem="{Binding Transition.Gesture}" ItemsSource="{Binding DataContext.Gestures.Gestures, ElementName=Root}" Margin="4,0,4,0" Visibility="{Binding IsEditing, ConverterParameter=false, Converter={StaticResource VisibilityConverter}}">
+                            </ComboBox>
+                            <ComboBox SelectedItem="{Binding Transition.Method}" ItemsSource="{Binding DataContext.Methods, ElementName=Root}" Margin="4,0" Visibility="{Binding IsEditing, ConverterParameter=false, Converter={StaticResource VisibilityConverter}}">
+                            </ComboBox>
+                            <!-- 
+                            <TextBox x:Name="EditBox" Text="{Binding Gesture.Name}" Margin="4,0" VerticalAlignment="Center" HorizontalAlignment="Stretch" Visibility="{Binding IsEditing, ConverterParameter=false, Converter={StaticResource VisibilityConverter}}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="LostFocus">
+                                        <cmd:EventToCommand Command="{Binding FinishEditingCommand, Mode=OneWay}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+                            <TextBlock Margin="4,0" Text="{Binding Gesture.Guid}" FontSize="9" Foreground="Gray" />-->
+                        </StackPanel>
+                    </DockPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+        </ListBox>
+    </DockPanel>
+</UserControl>
